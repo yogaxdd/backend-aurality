@@ -3,7 +3,7 @@ const app = express();
 
 app.use(express.json());
 
-// Route untuk memvalidasi token
+// Endpoint untuk validasi token
 app.post("/validate-token", (req, res) => {
   const { accessToken } = req.body;
 
@@ -26,9 +26,9 @@ app.post("/validate-token", (req, res) => {
   }
 });
 
-// Default route
+// Default route untuk memastikan server berjalan
 app.get("/", (req, res) => {
-  res.send("Server is running!");
+  res.send("Backend is running!");
 });
 
 module.exports = app;
