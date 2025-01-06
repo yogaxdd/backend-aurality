@@ -1,34 +1,30 @@
-const express = require("express");
-const app = express();
+export default function handler(req, res) {
+    if (req.method === 'POST') {
+        try {
+            const { accessToken } = req.body;
 
-app.use(express.json());
+            if (!accessToken) {
+                return res.status(400).json({ error: 'Access Token is required' });
+            }
 
-// Endpoint untuk validasi token
-app.post("/validate-token", (req, res) => {
-  const { accessToken } = req.body;
-
-  if (!accessToken) {
-    return res.status(400).json({ error: "Access Token not provided" });
-  }
-
-  // Simulasi validasi token
-  if (accessToken.startsWith("BQ")) {
-    return res.json({
-      success: true,
-      user: {
-        id: "spotify_user_id",
-        display_name: "Spotify User",
-        email: "user@example.com",
-      },
-    });
-  } else {
-    return res.status(401).json({ error: "Invalid or expired token" });
-  }
-});
-
-// Default route untuk memastikan server berjalan
-app.get("/", (req, res) => {
-  res.send("Backend is running!");
-});
-
-module.exports = app;
+            // Simulasi validasi access token
+            if (accessToken === 'VALID_TOKEN') {
+                return res.status(200).json({
+                    success: true,
+                    user: {
+                        id: '12345',
+                        name: 'Test User',
+                        email: 'testuser@example.com',
+                    },
+                });
+            } else {
+                return res.status(401).json({ error: 'Invalid Access Token' });
+            }
+        } catch (error) {
+            console.error('Server Error:', error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    } else {
+        return res.status(405).json({ error: 'Method Not Allowed' });
+    }
+}
