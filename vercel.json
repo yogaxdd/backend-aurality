@@ -1,7 +1,9 @@
 {
-    "version": 2,
-    "routes": [
-      { "src": "/validate-token", "dest": "/api/validate-token.js" }
-    ]
-  }
-  
+  "version": 2,
+  "routes": [
+    {
+      "src": "/.*",
+      "dest": "index.js"
+    }
+  ]
+}
