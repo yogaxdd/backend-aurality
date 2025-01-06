@@ -3,12 +3,13 @@ export default function handler(req, res) {
         try {
             const { accessToken } = req.body;
 
+            // Periksa apakah Access Token ada
             if (!accessToken) {
                 return res.status(400).json({ error: 'Access Token is required' });
             }
 
             // Simulasi validasi access token
-            if (accessToken === 'VALID_TOKEN') {
+            if (accessToken === '12345') {
                 return res.status(200).json({
                     success: true,
                     user: {
