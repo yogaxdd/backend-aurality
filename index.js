@@ -8,8 +8,8 @@ const app = express();
 app.use(cors());
 
 // Spotify API credentials
-const CLIENT_ID = 'your_spotify_client_id';
-const CLIENT_SECRET = 'your_spotify_client_secret';
+const CLIENT_ID = '1f13df46fabb406fb36044a8710115dd';
+const CLIENT_SECRET = 'a645f30e237d43d2a805b78d2f9bb3e3';
 const REDIRECT_URI = 'com.yogaxd.aurality://callback';
 
 // Spotify login route
