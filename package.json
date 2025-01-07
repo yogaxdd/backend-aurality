@@ -1,9 +1,0 @@
-{
-    "name": "spotify-backend",
-    "version": "1.0.0",
-    "main": "api/validate-token.js",
-    "dependencies": {
-      "node-fetch": "^3.3.1"
-    }
-  }
-  
