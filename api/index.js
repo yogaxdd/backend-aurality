@@ -24,7 +24,7 @@ app.get('/login', (req, res) => {
         redirect_uri: REDIRECT_URI,
     });
 
-    res.redirect(`https://accounts.spotify.com/authorize?${queryParams}`);
+    res.redirect(https://accounts.spotify.com/authorize?${queryParams});
 });
 
 // Callback setelah login Spotify
@@ -46,7 +46,7 @@ app.get('/callback', async (req, res) => {
             }),
             {
                 headers: {
-                    Authorization: `Basic ${Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')}`,
+                    Authorization: Basic ${Buffer.from(${CLIENT_ID}:${CLIENT_SECRET}).toString('base64')},
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
             }
@@ -55,7 +55,7 @@ app.get('/callback', async (req, res) => {
         const { access_token } = tokenResponse.data;
 
         // Redirect ke aplikasi dengan access token
-        res.redirect(`${REDIRECT_URI}?access_token=${access_token}`);
+        res.redirect(${REDIRECT_URI}?access_token=${access_token});
     } catch (error) {
         console.error('Error saat mendapatkan access token:', error.response?.data || error.message);
         res.status(500).send('Failed to authenticate with Spotify.');
@@ -64,3 +64,16 @@ app.get('/callback', async (req, res) => {
 
 // Export untuk Vercel
 module.exports = app;
+
+nih dah bener kan?
+btw di api/index.js ini
+
+ini vercel.json
+{
+  "version": 2,
+  "routes": [
+    { "src": "/(.*)", "dest": "/api/index.js" }
+  ]
+}
+
+dahh apalagi? ini udh bener, btw klo buat kode baru kamu copy id nya yg atas aku cape copas dri spotify mulu
