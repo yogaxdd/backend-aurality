@@ -4,57 +4,63 @@ const querystring = require('querystring');
 
 const app = express();
 
-// Spotify API Keys (gunakan Environment Variables di Vercel)
+// API keys dan Redirect URI dari Spotify (gunakan di Vercel Environment Variables)
 const CLIENT_ID = process.env.CLIENT_ID || '1f13df46fabb406fb36044a8710115dd';
 const CLIENT_SECRET = process.env.CLIENT_SECRET || 'a645f30e237d43d2a805b78d2f9bb3e3';
 const REDIRECT_URI = process.env.REDIRECT_URI || 'com.yogaxd.aurality://callback';
 
-// Step 1: Endpoint untuk Login
+// Endpoint untuk mengecek server
+app.get('/', (req, res) => {
+    res.send('Aurality backend is running!');
+});
+
+// Endpoint login untuk Spotify
 app.get('/login', (req, res) => {
     const scope = 'user-read-private user-read-email';
-    const authUrl = `https://accounts.spotify.com/authorize?${querystring.stringify({
+    const queryParams = querystring.stringify({
         response_type: 'code',
         client_id: CLIENT_ID,
         scope,
         redirect_uri: REDIRECT_URI,
-    })}`;
-    res.redirect(authUrl);
+    });
+
+    res.redirect(`https://accounts.spotify.com/authorize?${queryParams}`);
 });
 
-// Step 2: Endpoint untuk menerima Callback
+// Callback setelah login Spotify
 app.get('/callback', async (req, res) => {
     const code = req.query.code || null;
 
     if (!code) {
-        return res.status(400).send('Authorization code not found.');
+        return res.status(400).send('No code provided.');
     }
 
     try {
-        const tokenResponse = await axios.post('https://accounts.spotify.com/api/token', querystring.stringify({
-            code: code,
-            redirect_uri: REDIRECT_URI,
-            grant_type: 'authorization_code',
-        }), {
-            headers: {
-                Authorization: `Basic ${Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')}`,
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-        });
+        // Tukarkan kode dengan Access Token
+        const tokenResponse = await axios.post(
+            'https://accounts.spotify.com/api/token',
+            querystring.stringify({
+                grant_type: 'authorization_code',
+                code: code,
+                redirect_uri: REDIRECT_URI,
+            }),
+            {
+                headers: {
+                    Authorization: `Basic ${Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')}`,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            }
+        );
 
         const { access_token } = tokenResponse.data;
-        console.log('Access token berhasil didapat:', access_token);
 
+        // Redirect ke aplikasi dengan access token
         res.redirect(`${REDIRECT_URI}?access_token=${access_token}`);
     } catch (error) {
-        console.error('Error exchanging code for token:', error.response?.data || error.message);
+        console.error('Error saat mendapatkan access token:', error.response?.data || error.message);
         res.status(500).send('Failed to authenticate with Spotify.');
     }
 });
 
-// Step 3: Health Check Endpoint
-app.get('/', (req, res) => {
-    res.send('Backend Aurality berjalan dengan baik!');
-});
-
-// Vercel-specific: gunakan port default
+// Export untuk Vercel
 module.exports = app;
